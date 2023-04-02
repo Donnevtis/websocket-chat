@@ -1,25 +1,61 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import { hasToken, logout } from '@/api';
+import { PATHS } from '@/types/types';
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
+
+const NotFound = () => import('../components/NotFound.vue');
+const LoginView = () => import('../views/LoginView.vue');
+const TopicsView = () => import('../views/TopicsView.vue');
+const ChatView = () => import('../views/ChatView.vue');
 
 const routes: Array<RouteRecordRaw> = [
   {
-    path: '/',
-    name: 'home',
-    component: HomeView
+    path: '/:path(.*)',
+    component: NotFound,
   },
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-  }
-]
+    path: '/',
+    redirect: PATHS.Topics,
+  },
+  {
+    path: PATHS.Login,
+    name: 'login',
+    component: LoginView,
+    beforeEnter: () => {
+      logout();
+    },
+  },
+  {
+    path: PATHS.Topics,
+    name: 'topics',
+    component: TopicsView,
+    children: [
+      {
+        path: `${PATHS.Chat}/:id`,
+        name: 'chat',
+        component: ChatView,
+      },
+      {
+        path: `${PATHS.Chat}/:id(.*)*`,
+        name: 'NotFound',
+        component: NotFound,
+      },
+    ],
+  },
+  {
+    path: PATHS.Logout,
+    redirect: PATHS.Login,
+  },
+];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes
-})
+  routes,
+});
 
-export default router
+router.beforeEach(async to => {
+  if (to.name !== 'login' && !hasToken()) {
+    return PATHS.Login;
+  }
+});
+
+export default router;

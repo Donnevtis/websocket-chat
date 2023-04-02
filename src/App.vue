@@ -1,30 +1,57 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view/>
+  <router-view />
 </template>
 
 <style lang="scss">
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: $color-bg;
+}
+
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Roboto', Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: $color-text-secondary;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
 }
 
-nav {
-  padding: 30px;
+input:focus-visible {
+  outline-offset: 0px;
+}
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
+input,
+select,
+a {
+  border: none;
+  text-decoration: none;
+  background-color: transparent;
+  color: $color-text-hint;
+}
 
-    &.router-link-exact-active {
-      color: #42b983;
-    }
+:focus-visible {
+  outline-width: 0;
+}
+
+button {
+  border: none;
+  cursor: pointer;
+  &:focus {
+    outline: none;
   }
+}
+
+ul {
+  list-style-type: none;
 }
 </style>
